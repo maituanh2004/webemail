@@ -1,0 +1,156 @@
+<style>
+    .email {
+        max-width: 600px;
+        margin: 80px auto; 
+        padding: 20px;
+        background-color: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        color: #333;
+        font-family: 'Roboto', sans-serif;
+    }
+
+    .email__title {
+        color: #1E1E2F;
+        font-size: 1.8em;
+        margin-bottom: 15px;
+        border-bottom: 2px solid #FFD700;
+        padding-bottom: 5px;
+    }
+
+    .email__meta {
+        margin: 10px 0;
+        font-size: 1em;
+        color: #555;
+    }
+    
+    .email__meta-label {
+        color: #1E1E2F;
+        font-weight: bold;
+    }
+
+    .email__divider {
+        border: none;
+        height: 1px;
+        background-color: #ddd;
+        margin: 20px 0;
+    }
+
+    .email__content {
+        line-height: 1.6;
+        color: #444;
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        border-radius: 20px;
+        font-weight: bold;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+        transform: scale(1.05);
+    }
+
+    .btn--primary {
+        background-color: #68435e;
+        color: #1E1E2F;
+    }
+
+    .btn--primary:hover {
+        background-color: #704a70;
+    }
+
+    .btn--success {
+        background-color: #4CAF50;
+        color: white;
+    }
+
+    .btn--success:hover {
+        background-color: #45a049;
+    }
+
+    .attachment {
+        margin-top: 20px;
+        padding: 15px;
+        background: #f8f9fa;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+
+    .attachment:hover {
+        background: #e9ecef;
+    }
+
+    .attachment-box {
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        background: white;
+        border: 1px solid #dee2e6;
+        border-radius: 4px;
+    }
+
+    .attachment-box i {
+        margin-right: 10px;
+        color: #6c757d;
+        font-size: 1.2em;
+    }
+
+    .attachment-link {
+        color: #007bff;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .attachment-link:hover {
+        text-decoration: underline;
+        color: #0056b3;
+    }
+     .download-email-btn {
+        display: inline-block;
+        margin-top: 20px;
+        margin-right: 10px;
+        padding: 10px 20px;
+        background-color: #4CAF50;
+        color: white;
+        text-decoration: none;
+        border-radius: 20px;
+        font-weight: bold;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    .download-email-btn:hover {
+        background-color: #45a049;
+        transform: scale(1.05);
+    }
+
+    .button-group
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+</style>
+<div class="email">
+    <h2 class="email__title">{{email.subject}}</h2>
+    <p class="email__meta"><strong class="email__meta-label">From:</strong> {{email.sender_name}}</p>
+    <p class="email__meta"><strong class="email__meta-label">Date:</strong> {{formatDate email.created_at}}</p>
+    <hr class="email__divider">
+    <p class="email__content">{{email.body}}</p>
+    {{#if email.attachment}}
+        <div class="attachment">
+            <p class="email__meta-label">Attachment:</p>
+            <div class="attachment-box">
+                <i class="fas fa-paperclip"></i>
+                <a href="{{email.attachmentUrl}}" download="{{email.originalFileName}}" class="attachment-link">
+                    {{email.originalFileName}}
+                </a>
+            </div>
+        </div>
+    {{/if}}
+    
+    <a href="/inbox" class="btn btn--primary">Back to Inbox</a>
+</div>

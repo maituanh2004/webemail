@@ -1,0 +1,191 @@
+<style>
+    .page-container {
+        display: flex;
+        min-height: 100vh;
+        background-color: #f5f5f5;
+    }
+
+    .left-menu {
+        width: 200px;
+        background: #1A1A2E;
+        padding: 20px;
+        height: 100vh;
+        position: fixed;
+    }
+
+    .left-menu a {
+        display: block;
+        color: white;
+        text-decoration: none;
+        padding: 10px 15px;
+        margin-bottom: 10px;
+        border-radius: 4px;
+    }
+
+    .left-menu a:hover {
+        background: #333;
+    }
+
+    .main-content {
+        flex: 1;
+        margin-left: 200px;
+        padding: 20px;
+    }
+
+    .inbox-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        background: white;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .delete-btn {
+        background: #dc3545;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .delete-btn:hover {
+        background: #c82333;
+    }
+
+    .email-list {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .email-item {
+        display: flex;
+        align-items: center;
+        padding: 15px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .email-item:last-child {
+        border-bottom: none;
+    }
+
+    .email-checkbox {
+        margin-right: 15px;
+    }
+
+    .email-content {
+        display: grid;
+        grid-template-columns: 200px 1fr 150px;
+        gap: 20px;
+        flex: 1;
+        align-items: center;
+    }
+
+    .email-sender {
+        font-weight: 500;
+    }
+
+    .email-subject {
+        color: #333;
+        text-decoration: none;
+    }
+
+    .email-subject:hover {
+        color: #000;
+    }
+
+    .email-time {
+        color: #666;
+        font-size: 0.9em;
+        text-align: right;
+    }
+
+    .pagination {
+        margin-top: 20px;
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .pagination a {
+        color: #1A1A2E;
+        text-decoration: none;
+        padding: 8px 12px;
+        border: 1px solid #1A1A2E;
+        border-radius: 4px;
+    }
+
+    .pagination a.active {
+        background: #1A1A2E;
+        color: white;
+    }
+</style>
+
+<div class="page-container">
+    
+
+    <div class="main-content">
+        <div class="inbox-header">
+            <h2>Inbox</h2>
+            <button onclick="deleteEmails()" class="delete-btn">Delete Selected</button>
+        </div>
+
+        <div class="email-list">
+            {{#each emails}}
+                <div class="email-item" id="email-{{this.id}}">
+                    <input type="checkbox" class="email-checkbox" value="{{this.id}}">
+                    <div class="email-content">
+                        <span class="email-sender">{{this.sender}}</span>
+                        <a href="/emails/{{this.id}}"{{this.subject}} class="email-subject">
+                            {{#if this.subject}}{{this.subject}}{{else}}(no subject){{/if}}
+                        </a>
+                        <span class="email-time">{{formatDate this.created_at}}</span>
+                    </div>
+                </div>
+            {{else}}
+                <div class="email-item">No emails found</div>
+            {{/each}}
+        </div>
+
+        {{#if totalPages}}
+            <div class="pagination">
+                {{#each (range 1 totalPages)}}
+                    <a href="/inbox?page={{this}}" {{#if (eq ../currentPage this)}}class="active"{{/if}}>
+                        {{this}}
+                    </a>
+                {{/each}}
+            </div>
+        {{/if}}
+    </div>
+</div>
+
+<script>
+async function deleteEmails() {
+    const checkboxes = document.querySelectorAll('.email-checkbox:checked');
+    const emailIds = Array.from(checkboxes).map(cb => cb.value);
+    
+    if (emailIds.length === 0) return;
+    
+    try {
+        const response = await fetch('/api/emails/delete', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ emailIds })
+        });
+        
+        if (response.ok) {
+            emailIds.forEach(id => {
+                document.querySelector(`#email-${id}`).remove();
+            });
+        }
+    } catch (error) {
+        console.error('Error deleting emails:', error);
+    }
+}
+</script>

@@ -1,0 +1,192 @@
+<style>
+    .compose-content {
+        background: white;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        max-width: 800px;
+        margin: 20px auto;
+        position: relative;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 14px;
+    }
+
+    .form-control:focus {
+        border-color: #84546b;
+        outline: none;
+        box-shadow: 0 0 5px rgba(132, 84, 107, 0.2);
+    }
+
+    textarea.form-control {
+        min-height: 200px;
+        resize: vertical;
+    }
+
+    .alert {
+        padding: 15px;
+        margin-bottom: 20px;
+        border: 1px solid transparent;
+        border-radius: 4px;
+    }
+
+    .alert-error {
+        color: #721c24;
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
+    }
+
+    .alert-success {
+        color: #155724;
+        background-color: #d4edda;
+        border-color: #c3e6cb;
+    }
+
+    .button-container {
+        position: sticky;
+        bottom: 0;
+        background: white;
+        padding: 15px 0;
+        margin-top: 20px;
+        border-top: 1px solid #eee;
+        text-align: center;
+    }
+
+    .send-btn {
+        background-color: #84546b;
+        color: white;
+        padding: 12px 30px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        min-width: 200px;
+    }
+
+    .send-btn:hover {
+        background-color: #6a4355;
+        transform: translateY(-1px);
+    }
+
+    .send-btn:active {
+        transform: translateY(1px);
+    }
+
+    .required::after {
+        content: " *";
+        color: #dc3545;
+    }
+
+    .file-input-container {
+        position: relative;
+    }
+
+    .file-name {
+        margin-top: 5px;
+        font-size: 0.9em;
+        color: #666;
+    }
+
+    /* Thêm animation cho alerts */
+    @keyframes slideIn {
+        from {
+            transform: translateY(-20px);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    .alert {
+        animation: slideIn 0.3s ease-out;
+    }
+</style>
+
+<div class="compose-content">
+    <h2>Compose New Email</h2>
+
+    {{#if error}}
+        <div class="alert alert-error">
+            <i class="fas fa-exclamation-circle"></i> {{error}}
+        </div>
+    {{/if}}
+
+    {{#if success}}
+        <div class="alert alert-success">
+            <i class="fas fa-check-circle"></i> {{success}}
+        </div>
+    {{/if}}
+
+   <form action="/compose" method="POST">
+    <div class="form-group">
+        <label for="recipient" class="required">To:</label>
+        <select id="recipient" name="recipient" class="form-control" required>
+            <option value="">Select recipient...</option>
+            {{#each users}}
+                <option value="{{this.id}}">{{this.fullname}} ({{this.email}})</option>
+            {{/each}}
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="subject">Subject:</label>
+        <input type="text" id="subject" name="subject" class="form-control" 
+               placeholder="(no subject)">
+    </div>
+
+    <div class="form-group">
+        <label for="body">Message:</label>
+        <textarea id="body" name="body" class="form-control" 
+                  placeholder="Write your message here..."></textarea>
+    </div>
+    //gui file.
+     <div class="form-group"></div>
+        <label for="attachment">Attachment:</label>
+        <input type="file" id="attachment" name="attachment" class="form-control">
+        <div id="fileName" class="file-name"></div>
+    </div>
+    <div class="button-container">
+        <button type="submit" class="send-btn">
+            <i class="fas fa-paper-plane"></i> Send Email
+        </button>
+    </div>
+</form>
+</div>
+
+<script>
+function updateFileName(input) {
+    const fileName = input.files[0]?.name;
+    document.getElementById('fileName').textContent = fileName ? `Selected file: ${fileName}` : '';
+}
+
+document.getElementById('emailForm').onsubmit = function(e) {
+    const recipient = document.getElementById('recipient').value;
+    if (!recipient) {
+        e.preventDefault();
+        alert('Please select a recipient');
+        return false;
+    }
+    return true;
+};
+</script>
+get.post

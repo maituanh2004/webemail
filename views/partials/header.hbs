@@ -1,0 +1,70 @@
+<style>
+    .main-header {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #1A1A2E;
+        color: #ffffff;
+        padding: 10px 20px; /* Reduced padding for better alignment */
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 70px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        z-index: 1000;
+        transition: background-color 0.3s ease;
+    }
+
+    .main-header .logo a {
+        color: #af979a;
+        font-size: 1.8em;
+        font-weight: bold;
+        text-transform: uppercase;
+        text-decoration: none;
+    }
+
+    .main-header .header-actions {
+        display: flex;
+        align-items: center;
+        margin-right: 20px; /* Add margin to prevent clipping */
+    }
+
+    .main-header .header-actions .btn {
+        margin-left: 10px; /* Adjust margin */
+        padding: 8px 16px; /* Slightly smaller padding */
+        color: #1A1A2E;
+        background-color: #9f8686;
+        border: none;
+        border-radius: 20px;
+        font-weight: bold;
+        text-decoration: none;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    .main-header .header-actions .btn:hover {
+        background-color: #947782;
+        transform: scale(1.05);
+    }
+
+    .main-header .header-actions span {
+        margin-right: 10px;
+        color: #ffffff;
+    }
+</style>
+<header class="main-header">
+    <div class="logo">
+        <a href="/">My Email</a>
+    </div>
+    <div class="header-actions">
+        {{#if loggedIn}}
+            <span>Welcome, {{userFullname}}!</span>
+            <form action="/logout" method="POST" style="display: inline;">
+                <button type="submit" class="btn">Log Out</button>
+            </form>
+        {{else}}
+            <a href="/" class="btn">Sign In</a>
+            <a href="/signup" class="btn">Sign Up</a>
+        {{/if}}
+    </div>
+</header>
